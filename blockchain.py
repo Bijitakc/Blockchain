@@ -1,6 +1,9 @@
-import hashlib
 import json
+import hashlib
+from flask import Flask
 from time import time
+from uuid import uuid4
+from textwrap import dedent
 
 
 class Blockchain(object):
@@ -11,7 +14,25 @@ class Blockchain(object):
 
         #create a genesis block(first block without predecessors)
         self.new_block(previous_hash = 1, proof = 100)
+    
+    def proof_of_work(self, last_proof):
+        """
+        A pow algorithm as follows:
+        - Find a number p' such that hash(pp') contains leading 4 zeroes, where p is the previous p'
+        - p is the previous proof, and p' is the new proof
 
+        """
+        proof = 0
+        while self.valid_proof(last_proof, proof) is False:
+            proof +=1
+
+        return proof
+    
+    @staticmethod
+    def valid_proof(last_proof, proof):
+        guess = f'{last_proof}{proof}'.encode()
+        guess_hash = hashlib.sha256(guess).hexdigest()
+        return guess_hash[:4] == "0000"
     
     #creates a new block and adds it to the chain
     def new_block(self, proof, previous_hash = None):
