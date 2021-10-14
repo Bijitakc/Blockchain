@@ -3,11 +3,17 @@ import hashlib
 from urllib import parse
 import uuid
 import sys
+import psycopg2
 from time import time
 from uuid import uuid4
 from textwrap import dedent
 from urllib.parse import urlparse
 from flask import Flask, jsonify, request
+
+#To connect to database
+from db_info import DB_HOST, DB_NAME, DB_USER, DB_PASS
+
+conn = psycopg2.connect(dbname = DB_NAME, user = DB_USER, password = DB_PASS, host = DB_HOST)
 
 
 class Blockchain(object):
@@ -108,6 +114,11 @@ class Blockchain(object):
         #Reset the curent list of transactions
         self.current_transactions = []
         self.chain.append(block)
+        cur = conn.cursor()
+        # cur.execute("INSERT INTO postgres (block) VALUES (%s)", ("sdcfvg",))
+        # cur.execute("CREATE TABLE blockchain (index SERIAL PRIMARY KEY, timestamp TIMESTAMP, proof VARCHAR);")
+        conn.commit()
+        cur.close()
         return block
 
     #creates a new transaction to go into the next mined block
