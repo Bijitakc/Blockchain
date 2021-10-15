@@ -1,3 +1,4 @@
+import os
 import json
 import hashlib
 from urllib import parse
@@ -11,9 +12,11 @@ from urllib.parse import urlparse
 from flask import Flask, jsonify, request
 
 #To connect to database
-from db_info import DB_HOST, DB_NAME, DB_USER, DB_PASS
+from dotenv import load_dotenv
 
-conn = psycopg2.connect(dbname = DB_NAME, user = DB_USER, password = DB_PASS, host = DB_HOST)
+load_dotenv() 
+
+conn = psycopg2.connect(dbname = os.environ.get('DB_NAME'), user = os.environ.get('DB_USER'), password = os.environ.get('DB_PASS'), host = os.environ.get('DB_HOST'))
 
 
 class Blockchain(object):

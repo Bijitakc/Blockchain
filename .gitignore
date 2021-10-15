@@ -2,7 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
 
 #local
-dbinfo.py
+.env
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
